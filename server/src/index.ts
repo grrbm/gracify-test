@@ -1,12 +1,18 @@
 import { syncModels } from "./models";
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 const exampleRoute = require("./routes/users");
 
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use("/users", exampleRoute);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const PORT = 3000;
+require("./routes/users.routes")(app);
+
+const PORT = 4000;
 
 app.listen(PORT, () => {
   console.log("Server started on port " + PORT);
