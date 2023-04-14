@@ -7,5 +7,5 @@ module.exports = (app) => {
   router.get("/", users.findAll);
   router.post("/", users.create);
 
-  app.use("/api/users");
+  app.use("/api/users", router);
 };
