@@ -3,7 +3,25 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 
-app.use(cors({ origin: "http://localhost:3000" }));
+const allowedOrigins = [
+  "http://localhost:19000", //Expo for iOS & iOS simulator,
+  "http://10.0.2.2:19000", //Expo for Android,
+  "http/localhost:19006", //Expo for Web,
+  "http://localhost:3000", // Your existing origin
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
