@@ -4,7 +4,22 @@ const models_1 = require("./models");
 const express = require("express");
 const app = express();
 const cors = require("cors");
-app.use(cors({ origin: "http://localhost:3000" }));
+const allowedOrigins = [
+    "http://localhost:19000",
+    "http://10.0.2.2:19000",
+    "http/localhost:19006",
+    "http://localhost:3000", // Your existing origin
+];
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || !allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error("Not allowed by CORS: " + origin));
+        }
+    },
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 require("./routes/users.routes")(app);

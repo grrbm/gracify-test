@@ -28,7 +28,7 @@ export default function App() {
       setLoading(false);
     }
     getData();
-  });
+  }, []);
   return (
     <View style={styles.container}>
       <Text>My Expo Application !!</Text>
