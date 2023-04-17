@@ -29,6 +29,7 @@ export default function App() {
       if (response.ok) {
         Alert.alert("Success", "Login successful");
         // Handle successful login here
+        getData();
       } else {
         Alert.alert("Error", "Login failed");
         // Handle login error here
@@ -38,26 +39,25 @@ export default function App() {
       console.error("Error submitting form:", error);
     }
   };
-
-  useEffect(() => {
-    async function getData() {
-      setLoading(true);
-      try {
-        const result = await fetchData();
-        console.log("Success! result: " + JSON.stringify(result));
-        if (result.success) {
-          setData(result.data);
-          setError(undefined);
-        } else {
-          setError(result.message);
-        }
-      } catch (error) {
-        console.log("Error in the request !" + error);
-        setData("Error in the request !" + error);
+  async function getData() {
+    setLoading(true);
+    try {
+      const result = await fetchData();
+      console.log("Success! result: " + JSON.stringify(result));
+      if (result.success) {
+        setData(result.data);
+        setError(undefined);
+      } else {
+        setError(result.message);
       }
-
-      setLoading(false);
+    } catch (error) {
+      console.log("Error in the request !" + error);
+      setData("Error in the request !" + error);
     }
+
+    setLoading(false);
+  }
+  useEffect(() => {
     getData();
   }, []);
   return (
