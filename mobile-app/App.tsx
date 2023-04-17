@@ -63,32 +63,41 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>My Expo Application !!</Text>
-      {loading ? (
-        error ? (
-          <Text>{error}</Text>
+      <View style={styles.picker}>
+        {loading ? (
+          error ? (
+            <Text>{error}</Text>
+          ) : (
+            <Text>Loading...</Text>
+          )
         ) : (
-          <Text>Loading...</Text>
-        )
-      ) : (
-        <Text>{data ? JSON.stringify(data) : "Data not found."}</Text>
-      )}
-
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <Button title="Submit" onPress={submitForm} />
+          <Text>
+            {data
+              ? JSON.stringify(
+                  data.map((user: any) => ({
+                    username: user.username,
+                    password: user.password,
+                  }))
+                )
+              : "Data not found."}
+          </Text>
+        )}
       </View>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <Button title="Submit" onPress={submitForm} />
       <StatusBar style="auto" />
     </View>
   );
@@ -107,5 +116,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginBottom: 10,
+  },
+  picker: {
+    marginBottom: 20,
   },
 });
