@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { fetchData } from "./api";
+import { Text, View, TextInput, Button, Alert, StyleSheet } from "react-native";
+import { fetchData, API_URL } from "./api";
 import { useEffect, useState } from "react";
 
 export default function App() {
@@ -8,12 +8,43 @@ export default function App() {
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const submitForm = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Success", "Login successful");
+        // Handle successful login here
+      } else {
+        Alert.alert("Error", "Login failed");
+        // Handle login error here
+      }
+    } catch (error) {
+      Alert.alert("Error", "An error occurred");
+      console.error("Error submitting form:", error);
+    }
+  };
+
   useEffect(() => {
     async function getData() {
       setLoading(true);
       try {
         const result = await fetchData();
-        console.log("Success!!! result: " + JSON.stringify(result));
+        console.log("Success! result: " + JSON.stringify(result));
         if (result.success) {
           setData(result.data);
           setError(undefined);
@@ -42,6 +73,22 @@ export default function App() {
         <Text>{data ? JSON.stringify(data) : "Data not found."}</Text>
       )}
 
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <Button title="Submit" onPress={submitForm} />
+      </View>
       <StatusBar style="auto" />
     </View>
   );
@@ -50,8 +97,15 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginBottom: 10,
   },
 });
