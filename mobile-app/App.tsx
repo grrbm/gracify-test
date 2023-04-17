@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { Text, View, TextInput, Button, Alert, StyleSheet } from "react-native";
-import { fetchData, API_URL } from "./api";
+import { fetchData, postData, API_URL } from "./api";
 import { useEffect, useState } from "react";
 
 export default function App() {
@@ -13,20 +13,11 @@ export default function App() {
 
   const submitForm = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
+      const response = await postData("users", {
+        username: username,
+        password: password,
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.success) {
         Alert.alert("Success", "Login successful");
         // Handle successful login here
         getData();
@@ -35,14 +26,13 @@ export default function App() {
         // Handle login error here
       }
     } catch (error) {
-      Alert.alert("Error", "An error occurred");
-      console.error("Error submitting form:", error);
+      console.log("Error in the request !" + error);
     }
   };
   async function getData() {
     setLoading(true);
     try {
-      const result = await fetchData();
+      const result = await fetchData("users");
       console.log("Success! result: " + JSON.stringify(result));
       if (result.success) {
         setData(result.data);
