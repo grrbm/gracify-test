@@ -3,11 +3,7 @@ const API_URL = "http://192.168.0.102:4000";
 export async function fetchData(route: string): Promise<any> {
   try {
     const response = await fetch(`${API_URL}/api/${route}`);
-
-    console.log("got here");
     const data = await response.json();
-    console.log("Finished parsing !!!");
-    console.log("Just got data: " + JSON.stringify(data));
     return { success: true, message: "Successfully got data !", data };
   } catch (error: any) {
     console.log("Error fetching data:", error);
